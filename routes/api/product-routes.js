@@ -87,7 +87,7 @@ router.post('/', async (req, res) => {
 });
 
 // update product
-router.put('/:id', async (req, res) => {
+router.put('/:id', (req, res) => {
   // update product data
   Product.update(req.body, {
     where: {
@@ -130,6 +130,23 @@ router.put('/:id', async (req, res) => {
 
 router.delete('/:id', (req, res) => {
   // delete one product by its `id` value
-});
+  Product.destroy(
+    {
+      where: {
+        id: req.params.id
+      }
+    })
+    .then(productData => {
+      if(!productData) {
+        res.status(400).json(err);
+        return;
+      }
+      res.json(productData);
+    })
+    .catch((err) => {
+      // console.log(err);
+      res.status(500).json(err);
+    });
+  });   
 
 module.exports = router;
